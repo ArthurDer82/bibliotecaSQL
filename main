@@ -1,0 +1,79 @@
+CREATE DATABASE IF NOT EXISTS Sistema_de_Biblioteca;
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Area(
+CodArea VARCHAR(45) PRIMARY KEY ,
+DescricaoArea VARCHAR(45)
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Autor(
+CodAutor VARCHAR(45) PRIMARY KEY ,
+NomeAutor VARCHAR(45)
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Tipo(
+CodTipo VARCHAR(45) PRIMARY KEY ,
+DescricaoTipo VARCHAR(45),
+Prazo DATE
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Pessoa(
+CodPessoa VARCHAR(45) PRIMARY KEY ,
+NomePessoa VARCHAR(45),
+Rua VARCHAR(45),
+Numero INTEGER,
+CodTipo VARCHAR(45),
+CONSTRAINT CodTipo_CE FOREIGN KEY (CodTipo) REFERENCES Tipo (CodTipo)
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Telefone(
+PessoaTelefone VARCHAR(45) PRIMARY KEY,
+CodPessoa VARCHAR(45),
+CONSTRAINT CodPessoa_CE FOREIGN KEY (CodPessoa) REFERENCES Pessoa (CodPessoa)
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Tema(
+CodTema VARCHAR(45) PRIMARY KEY ,
+DescricaoTema VARCHAR(45),
+CodArea VARCHAR(45),
+CONSTRAINT CodArea_CE FOREIGN KEY (CodArea) REFERENCES Area (CodArea)
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Livro(
+ISBN VARCHAR(45) PRIMARY KEY ,
+Titulo VARCHAR(45),
+AnoPublicacao DATE,
+Editora VARCHAR(45),
+CodTema VARCHAR(45),
+CONSTRAINT CodTema_CE FOREIGN KEY (CodTema) REFERENCES Tema (CodTema)
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Escrito(
+CodAutor VARCHAR(45),
+ISBN VARCHAR(45),
+CONSTRAINT CodAutor_CE FOREIGN KEY (CodAutor) REFERENCES Autor (CodAutor),
+CONSTRAINT ISBN_CE FOREIGN KEY (ISBN) REFERENCES Livro (escritoescritoISBN)
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Volume(
+NumeroVolume INTEGER PRIMARY KEY,
+Situacao VARCHAR(45),
+ISBN VARCHAR(45),
+CONSTRAINT ISBN_CE2volume FOREIGN KEY (ISBN) REFERENCES Livro (ISBN)
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.DataEmprestimo(
+CodPessoa VARCHAR(45),
+NumeroVolume INTEGER,
+DataEmprestimo DATE,
+CONSTRAINT CodPessoa_CE2 FOREIGN KEY (CodPessoa) REFERENCES Pessoa (CodPessoa),
+CONSTRAINT NumeroVolume_CE FOREIGN KEY (NumeroVolume) REFERENCES Volume (NumeroVolume)
+);
+
+CREATE TABLE IF NOT EXISTS Sistema_de_Biblioteca.Empresta(
+CodPessoa VARCHAR(45),
+NumeroVolume INTEGER,
+DataDevolucao DATE,
+MultaAtraso INTEGER,
+CONSTRAINT CodPessoa_CE3 FOREIGN KEY (CodPessoa) REFERENCES Pessoa (CodPessoa),
+CONSTRAINT NumeroVolume_CE2 FOREIGN KEY (NumeroVolume) REFERENCES Volume (NumeroVolume)
+);
